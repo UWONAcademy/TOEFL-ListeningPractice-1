@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>practice 1 - 中文转英文</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 40px 20px;
+      background: linear-gradient(to bottom right, #e6f9f6, #f2fdfc);
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      padding: 30px;
+      margin-bottom: 30px;
+    }
+
+    h2 {
+      color: #21534f;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      color: #57b7b1;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      color: white;
+      background: linear-gradient(to right, #4f9be5, #47d3b4);
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    .exercise {
+      margin-top: 20px;
+    }
+
+    .exercise label {
+      display: block;
+      font-weight: bold;
+      margin: 10px 0 4px;
+    }
+
+    .exercise input {
+      width: 100%;
+      padding: 8px;
+      font-size: 16px;
+      margin-bottom: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    .result {
+      margin-top: 4px;
+      font-size: 14px;
+    }
+
+    .correct {
+      color: green;
+    }
+
+    .wrong {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <h2>UWON Academy Listening Practice 1 </h2>
+      <div class="subtitle">Practice 1：移民汇款</div>
+      <p><strong>第一遍：</strong>听听力，知大意，做笔记</p>
+      <button onclick="playAudio()">🎧 播放下一阶段音频</button>
+      <audio id="mainAudio" src="https://pfst.cf2.poecdn.net/base/audio/e374ee1897e7f3e3a2e925e559da8db84b7d36cde7d83cdd7fab4caaaec3bfc2"></audio>
+    </div>
+
+    <!-- 第二遍：中文 → 英文（词汇） -->
+    <div class="card" id="zhToEn">
+      <h2>第二遍：根据中文填写英文（词汇）</h2>
+      <div class="exercise" id="zhToEnList"></div>
+    </div>
+
+    <!-- 第三遍：中文 → 英文（句子） -->
+    <div class="card" id="zhToEnSentences">
+      <h2>第三遍：根据中文填写英文（句子）</h2>
+      <div class="exercise" id="zhToEnSentencesList"></div>
+    </div>
+  </div>
+
+  <script>
+    const audio = document.getElementById('mainAudio');
+    let playCount = 0;
+
+    function playAudio() {
+      if (playCount < 3) {
+        audio.currentTime = 0;
+        audio.play();
+        playCount++;
+        alert(`第 ${playCount} 遍播放开始`);
+      } else {
+        alert("音频已播放三遍！");
+      }
+    }
+
+    // 第二遍：词汇练习（中文 → 英文）
+    const zhToEnData = [
+      ["移民", "immigrants"],
+      ["汇款", "remittances"],
+      ["官方援助", "official aid"],
+      ["刚果民主共和国", "the Democratic Republic of Congo"],
+      ["马里兰州天主教援助救济会", "Catholic Relief Services in Maryland"],
+      ["艾滋病", "HIV/AIDS"],
+      ["国际货币基金组织", "the International Monetary Fund (IMF)"],
+      ["货币增值", "cause its money to increase in value"],
+      ["出口费用增加", "a country's exports can become more costly"],
+      ["竞争力下降", "less competitive"],
+      ["世界银行", "the World Bank"],
+      ["改善人们的生活", "improve people's lives"],
+      ["减少贫困", "reduce poverty"],
+      ["企业投资", "business investments"],
+      ["人力资本投资", "human capital investments"],
+      ["就在这时……", "that is precisely when..."]
+    ];
+
+    const zhToEnList = document.getElementById('zhToEnList');
+    zhToEnData.forEach(([zh, en], index) => {
+      const container = document.createElement('div');
+      container.innerHTML = `
+        <label>${index + 1}. ${zh}</label>
+        <input id="zh-en-${index}" type="text" />
+        <button onclick="checkAnswer('zh-en-${index}', \`${en}\`)">Check</button>
+        <div class="result" id="result-zh-en-${index}"></div>
+      `;
+      zhToEnList.appendChild(container);
+    });
+
+    // 第三遍：句子练习（中文 → 英文）
+    const zhToEnSentences = [
+      ["提供生活保障，减少贫困，为企业投资、人力资本投资、教育和健康提供资金支持。", "Provide funding for business investment, human capital investments, education, health"],
+      ["汇款是最主要的外汇来源。", "remittances is the biggest provider of foreign exchange"],
+      ["汇款对接收汇款国的经济会产生积极影响。", "Remittances affect the receiving country's economy in good ways"],
+      ["有人担忧整个国家经济的收入会导致该国货币增值，出口费用增加，竞争力下降。", "There is a concern that the income into a national economy will cause its money to increase in value. In turn, a country's exports can become more costly and less competitive."]
+    ];
+
+    const zhToEnSentencesList = document.getElementById('zhToEnSentencesList');
+    zhToEnSentences.forEach(([zh, en], index) => {
+      const container = document.createElement('div');
+      container.innerHTML = `
+        <label>${index + 1}. ${zh}</label>
+        <input id="zh-en-sent-${index}" type="text" />
+        <button onclick="checkAnswer('zh-en-sent-${index}', \`${en}\`)">Check</button>
+        <div class="result" id="result-zh-en-sent-${index}"></div>
+      `;
+      zhToEnSentencesList.appendChild(container);
+    });
+
+    // 通用检查函数
+    function checkAnswer(inputId, correctAnswer) {
+      const userInput = document.getElementById(inputId).value.trim().toLowerCase();
+      const correct = correctAnswer.toLowerCase();
+      const result = document.getElementById(`result-${inputId}`);
+      if (userInput === correct) {
+        result.textContent = "✅ 正确";
+        result.className = "result correct";
+      } else {
+        result.textContent = `❌ 错误，正确答案是：${correctAnswer}`;
+        result.className = "result wrong";
+      }
+    }
+  </script>
+</body>
+</html>
